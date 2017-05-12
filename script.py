@@ -22,9 +22,24 @@ from draw import *
   ==================== """
 
 def first_pass( commands ):
-    pass
-    
-
+    #ensures that you can put frames/etc at the bottom, and won't crash
+    isFrames = False
+    isBasename = False
+    isVary = False
+    for i in range(len(commands)):
+        if commands[i][0] == "frames":
+            num_frames = commands[i][1]
+            isFrames = True
+        if commands[i][0] == "basename":
+            basename = commands[i][1]
+            isBasename = True
+        if commands[i][0] == "vary":
+            isVary = True
+    if isVary and not isFrames:
+        exit()
+    if isFrames and not isBasename:
+        basename = "default"
+        print("Basename not found. Will save as {0} with {1} frames".format(basename, num_frames))
 
 """======== second_pass( commands ) ==========
 
@@ -44,8 +59,17 @@ def first_pass( commands ):
   appropirate value. 
   ===================="""
 def second_pass( commands, num_frames ):
-    pass
-
+    knobs = []
+    knob_dict = {}
+    #loops through number of frames
+    for i in range(num_frames):
+        knobs[i] = {}
+        #loops through the commands in each frame
+        for j in range(len(commands)):
+            if commands[j][0] == "vary" and commands[j][2] >= j and commands[j][3] <= j:
+                #(dict knob_dict) make the key = spinny, value = mathy stuff
+                pass
+                
 
 def run(filename):
     """
