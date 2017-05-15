@@ -67,9 +67,11 @@ def second_pass( commands, num_frames ):
         #loops through the commands in each frame
         for j in range(len(commands)):
             if commands[j][0] == "vary" and commands[j][2] >= j and commands[j][3] <= j:
-                #(dict knob_dict) make the key = spinny, value = mathy stuff
-                pass
-                
+                #vary e.g: vary spinny 0 49 0 1
+                vary = commands[j]
+                knobs[i][vary[1]] = vary[4] + ((vary[5] - vary[4]) / (vary[3] - vary[2]))
+        #run(filename)
+        #save_extension(
 
 def run(filename):
     """
