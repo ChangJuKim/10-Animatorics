@@ -22,7 +22,10 @@ from draw import *
   ==================== """
 
 def first_pass( commands ):
+    print("First_pass")
     #ensures that you can put frames/etc at the bottom, and won't crash
+    num_frames = 0
+    basename = "random_anim"
     isFrames = False
     isBasename = False
     isVary = False
@@ -36,10 +39,11 @@ def first_pass( commands ):
         if commands[i][0] == "vary":
             isVary = True
     if isVary and not isFrames:
+        print("vary found, but frames missing. Exiting.")
         exit()
     if isFrames and not isBasename:
-        basename = "default"
         print("Basename not found. Will save as {0} with {1} frames".format(basename, num_frames))
+    return num_frames
 
 """======== second_pass( commands ) ==========
 
@@ -59,19 +63,19 @@ def first_pass( commands ):
   appropirate value. 
   ===================="""
 def second_pass( commands, num_frames ):
-    knobs = []
+    print("Second_pass")
+    knobs = [None] * num_frames
     knob_dict = {}
     #loops through number of frames
     for i in range(num_frames):
         knobs[i] = {}
         #loops through the commands in each frame
         for j in range(len(commands)):
-            if commands[j][0] == "vary" and commands[j][2] >= j and commands[j][3] <= j:
+            if commands[j][0] == "vary" and commands[j][2] <= i and commands[j][3] > i:
                 #vary e.g: vary spinny 0 49 0 1
                 vary = commands[j]
-                knobs[i][vary[1]] = vary[4] + ((vary[5] - vary[4]) / (vary[3] - vary[2]))
-        #run(filename)
-        #save_extension(
+                knobs[i][vary[1]] = vary[4] + ((vary[5] - vary[4]) / float(vary[3] - vary[2]))
+
 
 def run(filename):
     """
@@ -89,13 +93,15 @@ def run(filename):
         print "Parsing failed."
         return
 
+    num_frames = first_pass(commands)
+    second_pass(commands, num_frames)
+
     ident(tmp)
     stack = [ [x[:] for x in tmp] ]
     screen = new_screen()
     tmp = []
     step = 0.1
     for command in commands:
-        print command
         c = command[0]
         args = command[1:]
 
